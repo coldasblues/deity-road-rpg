@@ -1,0 +1,25 @@
+{
+  "main_branch": "main",
+  "worktree_root": "../{repo}-worktrees",
+  "target_split": { "codex": 0.65, "claude": 0.35 },
+  "balance_window_runs": 20,
+  "max_parallel": { "codex": 2, "claude": 1 },
+  "timeout_minutes": 60,
+  "rate_limit_cooldown_minutes": 60,
+  "test_command": [],
+  "test_command_after_wo_002": ["godot", "--headless", "--path", "game", "-s", "res://addons/gut/gut_cmdln.gd", "-gdir=res://tests", "-gexit"],
+  "agents": {
+    "codex": {
+      "work": ["codex", "exec", "--sandbox", "workspace-write", "--json", "--output-last-message", "{last_message_file}", "-"],
+      "review": ["codex", "exec", "--sandbox", "read-only", "--output-last-message", "{last_message_file}", "-"],
+      "output": "codex-jsonl",
+      "rate_limit_patterns": ["rate limit", "rate_limit", "usage limit", "429"]
+    },
+    "claude": {
+      "work": ["claude", "-p", "--permission-mode", "acceptEdits", "--allowedTools", "Bash(git *),Bash(godot *),Bash(python *),Bash(py *)", "--output-format", "json"],
+      "review": ["claude", "-p", "--permission-mode", "dontAsk", "--allowedTools", "Read,Grep,Glob,Bash(git diff *),Bash(git log *)", "--output-format", "json"],
+      "output": "claude-json",
+      "rate_limit_patterns": ["rate limit", "rate_limit", "usage limit", "429"]
+    }
+  }
+}
